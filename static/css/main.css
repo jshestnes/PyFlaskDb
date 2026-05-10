@@ -1,0 +1,112 @@
+body {
+    font-family: "Raleway";
+    text-align: center;
+}
+
+#temperature {
+    background-color: #E5E5E5;
+    color: #302B29;
+}
+
+#xxxdevselect {
+    background-color: #01A88A;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid white;
+    margin: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+#dev101 {
+    background-color: #01A88A;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid white;
+    margin: 1px;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+
+
+#datebutton {
+    background-color: #01018A;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid white;
+    margin: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+#garagebutton {
+    background-color: #AA0A8A;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid white;
+    margin: 10px;
+    padding: 4px 15px;
+    cursor: pointer;
+}
+#garageportbutton {
+    background-color: #AA0A55;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid white;
+    margin: 10px;
+    padding: 4px 15px;
+    cursor: pointer;
+}
+#batmonitorbutton {
+    background-color: #990A22;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid white;
+    margin: 10px;
+    padding: 4px 15px;
+    cursor: pointer;
+}
+
+.button {
+  background-color: red;
+  border: white;
+  color: white;
+  margin: 10px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.buttonnavigation {
+  background-color: blue;
+  border: white;
+  color: white;
+  margin: 10px;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+
+label {
+    /* Font styles */
+    font-family: Arial, sans-serif;
+    color: #333;
+    font-weight: bold;
+
+    /* Layout and spacing */
+    display: block; /* Makes the label take up its own line (useful for vertical stacking) */
+    margin-bottom: 5px; /* Adds space below the label */
+}
