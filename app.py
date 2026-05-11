@@ -6,7 +6,7 @@ ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 11.05.2026
 app = Flask(__name__)
 app.secret_key = "sadfaweqr345tcvbbf"
 app.config["SESSION_COOKIE_NAME"] = "myCOOKIE_monSTER528"
-theDatabase = ""
+theDatabase = "/home/jsh/2026/tutorialtid20260327.db"  # Linux
 
 devidstart = 104
 
