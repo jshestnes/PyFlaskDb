@@ -1,14 +1,30 @@
 from datetime import datetime, date, timedelta
+import platform
 import sqlite3
 from flask import Flask, session, render_template, request, g
-ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026"
+ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 11.05.2026 "
 app = Flask(__name__)
 app.secret_key = "sadfaweqr345tcvbbf"
 app.config["SESSION_COOKIE_NAME"] = "myCOOKIE_monSTER528"
-#theDatabase = "D:/2026/tutorialtid20260327.db"     # Windows
-theDatabase = "/home/jsh/2026/tutorialtid20260327.db"     # Linux
+theDatabase = ""
 
 devidstart = 104
+
+
+def detect_os():
+    os_name = platform.system()  # Returns 'Windows', 'Linux', or 'Darwin' (macOS)
+
+    if os_name == "Windows":
+        print("Running on Windows")
+        theDatabase = "D:/2026/tutorialtid20260327.db"     # Windows
+    elif os_name == "Linux":
+        print("Running on Linux")
+        theDatabase = "/home/jsh/2026/tutorialtid20260327.db"  # Linux
+    elif os_name == "Darwin":
+        print("Running on macOS")
+    else:
+        print(f"Unknown OS: {os_name}")
+    return theDatabase
 
 sensorbeskrivelse = "Sensorbeskrivelse kommer xxx"
 
@@ -291,6 +307,8 @@ def date_select():
 
 if __name__ == '__main__':
     print(ver)
+    theDatabase = detect_os()
+    print(theDatabase)
     #app.run()
     #app.run(host="0.0.0.0", port=5000, debug=True)
     app.run(host="0.0.0.0", port=5000, debug=False)
