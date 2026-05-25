@@ -110,3 +110,7 @@ label {
     display: block; /* Makes the label take up its own line (useful for vertical stacking) */
     margin-bottom: 5px; /* Adds space below the label */
 }
+
+.temperaturedata {
+  text-align: right;
+}

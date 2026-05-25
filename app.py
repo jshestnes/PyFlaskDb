@@ -2,7 +2,7 @@ from datetime import datetime, date, timedelta
 import platform
 import sqlite3
 from flask import Flask, session, render_template, request, g
-ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 11.05.2026 "
+ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445"
 app = Flask(__name__)
 app.secret_key = "sadfaweqr345tcvbbf"
 app.config["SESSION_COOKIE_NAME"] = "myCOOKIE_monSTER528"
@@ -89,7 +89,7 @@ def index():
 
 
 
-def get_db(dateadjust: int,devidselected: int):
+def get_db(dateadjust: int, devidselected: int):
     print(">>> get_db")
     dbSQLite3Init()
     start = datetime.now().date()
@@ -155,7 +155,7 @@ def get_dbport(dateadjust: int,devidselected: int):
         db = sqlite3.connect(theDatabase, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         cursor = db.cursor()
         cursor.execute("SELECT datotid, dev, cmd, cmdtext, portseconds, bootcount, softwareid, restartreason from garageportdata "        # Columns 0-6
-                            " ORDER BY datotid DESC LIMIT 10")
+                            " ORDER BY datotid DESC LIMIT 16")
         all_dataport = cursor.fetchall()
 
     return all_dataport
@@ -194,8 +194,6 @@ def garageport_clicked():
 
 
 
-
-
 @app.route("/batmonitor-clicked", methods=["POST"])
 def batmonitor_clicked():
     print(">>> batmonitor_clicked")
@@ -211,8 +209,6 @@ def batmonitor_clicked():
     # Redirect back to home with a message
     data = get_dbbatmonitor(0, devid)
     return render_template("batmonitor.html", all_databat=data, tempdag=idag, dateadjust=0, sensorbeskrivelse=sensorbeskrivelse, devidselected=devid)
-
-
 
 
 
@@ -303,6 +299,61 @@ def date_select():
     # Redirect back to home with a message
     data = get_db(dateadjust2, devidselected)
     return render_template("index.html", all_data=data, tempdag=idag, dateadjust=dateadjust2, sensorbeskrivelse=sensorbeskrivelse, devidselected=devidselected)
+
+
+
+@app.route("/devices_clicked", methods=["POST"])
+def devices_clicked():
+    print(">>> devices_clicked")
+    idag = datetime.now().strftime("%A %d.%m.%Y")
+    datereg = ""
+    mac = ""
+    pos = ""
+    esp = ""
+    mod = ""
+
+    devidfind = request.form.get("devidfind")
+    print(f"devidfind: {devidfind}")
+    devidfindnew = request.form.get("devicebutton")
+    print(f"devidfindnew: {devidfindnew}")
+    if devidfindnew == "FIND":
+        data = get_device(devidfind)
+        print(data)
+        if (data):
+            datereg = data[0][0]
+            print(f"datereg: {datereg}")
+            mac = data[0][2]
+            print(f"mac: {mac}")
+            pos = data[0][3]
+            esp = data[0][4]
+            mod = data[0][5]
+        else:
+            datereg = f"Not found: {devidfind}"
+    # Redirect back to home with a message
+    #data = get_dbbatmonitor(0, devid)
+    return render_template("devices.html",
+                           devidfind=devidfind, datereg=datereg, mac=mac,
+                           pos=pos, esp=esp, mod=mod)
+
+
+# 25.05.2026 *******************************************************
+def get_device(devidselected: int):
+    print(f">>> get_device: {devidselected}")
+    dbSQLite3Init()
+
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = sqlite3.connect(theDatabase, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        cursor = db.cursor()
+        cursor.execute("SELECT "
+            " datereg, dev, "
+            " mac, pos, esp, mod, "
+            " sen1, sen2, sen3, sen4, sen5, sen6 "
+            " FROM devdata "
+            " WHERE dev = ?", (devidselected,))
+        all_databat = cursor.fetchall()
+
+    return all_databat
 
 
 if __name__ == '__main__':

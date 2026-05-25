@@ -39,9 +39,9 @@
     <td>{{ item[1] }}</td>
     <td>{{ item[2] }}</td>
     {% autoescape false %}
-    <td align="left">{{ item[3] | closedgreen() }}</td>
+    <td class="temperaturedata">{{ item[3] | closedgreen() }}</td>
     {% endautoescape %}
-    <td align="right">{{ item[4] | zeroseconds() }}</td>
+    <td class="temperaturedata">{{ item[4] | zeroseconds() }}</td>
     <td>{{ item[5] }}</td>
     <td>{{ item[6] }}</td>
   </tr>

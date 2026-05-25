@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Devices and microcontrollers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js')}}"></script>
+</head>
+<body>
+<div id="gotoindex">
+    <form action="{{ url_for('index') }}" method="POST">
+        <button type="submit" name="batmonitor" id="batmonitorbutton" value="301">Back to INDEX</button>
+    </form>
+</div>
+
+<div id="devices">
+    <form action="{{ url_for('devices_clicked') }}" method="POST">
+        <input type="text" name="devidfind" id="devidfind" value="{{ devidfind }}" size="4">
+        <button type="submit" name="devicebutton" id="devicebutton" value="FIND">FIND</button>
+        <button type="submit" name="devicebutton" id="devicebutton" value="NEW">NEW</button>
+
+<br>
+datereg <input type="text" name="datereg" id="datereg" value="{{ datereg }}" size="30">
+<br>
+mac <input type="text" name="mac" id="mac" value="{{ mac }}" size="30">
+<br>
+pos <input type="text" name="pos" id="pos" value="{{ pos }}" size="30">
+<br>
+esp <input type="text" name="esp" id="esp" value="{{ esp }}" size="30">
+<br>
+mod <input type="text" name="mod" id="mod" value="{{ mod }}" size="30">
+
+
+
+    </form>
+</div>
+
+
+
+sen1 TEXT
+sen2 TEXT
+sen3 TEXT
+sen4 TEXT
+sen5 TEXT
+sen6 TEXT
+
+
+
+</body>
+</html>
