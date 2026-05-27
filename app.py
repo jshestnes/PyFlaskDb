@@ -2,18 +2,17 @@ from datetime import datetime, date, timedelta
 import platform
 import sqlite3
 from flask import Flask, session, render_template, request, g
-ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445"
+ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445. 27.05.2026"
 app = Flask(__name__)
 app.secret_key = "sadfaweqr345tcvbbf"
 app.config["SESSION_COOKIE_NAME"] = "myCOOKIE_monSTER528"
 theDatabase = "/home/jsh/2026/tutorialtid20260327.db"  # Linux
 
 devidstart = 104
-
+sensorbeskrivelse = "Sensorbeskrivelse kommer xxx"
 
 def detect_os():
     os_name = platform.system()  # Returns 'Windows', 'Linux', or 'Darwin' (macOS)
-
     if os_name == "Windows":
         print("Running on Windows")
         theDatabase = "D:/2026/tutorialtid20260327.db"     # Windows
@@ -26,7 +25,6 @@ def detect_os():
         print(f"Unknown OS: {os_name}")
     return theDatabase
 
-sensorbeskrivelse = "Sensorbeskrivelse kommer xxx"
 
 # OK
 def adapt_date_iso(val: datetime) -> str:
@@ -108,7 +106,7 @@ def get_db(dateadjust: int, devidselected: int):
         db = sqlite3.connect(theDatabase, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         cursor = db.cursor()
         cursor.execute("SELECT datotid, dev, tem, hum, bar, alt, bootcount, softwareid, restartreason, "
-                            " voltbattery, percentagebat, analogvalue "
+                            " voltbattery, percentagebat, analogvalue, rssi "
                             " FROM tempdata"        # Columns 0-6
                             " WHERE DATE(datotid) = DATE(?) "
                             " AND dev = ? "

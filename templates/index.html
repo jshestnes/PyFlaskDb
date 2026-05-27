@@ -74,6 +74,7 @@
     <th>Vbat</th>
     <th>Perc</th>
     <th>Anv</th>
+    <th>Rssi</th>
   </tr>
 {% for item in all_data %}
   <tr>
@@ -89,6 +90,7 @@
     <td class="temperaturedata">{{ "%.0f"|format(item[9]) }}</td>
     <td class="temperaturedata">{{ "%.1f"|format(item[10]) }}</td>
     <td class="temperaturedata">{{ "%.0f"|format(item[11]) }}</td>
+    <td class="temperaturedata">{{ item[12] }}</td>
   </tr>
 {% endfor %}
 </table>
