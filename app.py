@@ -413,8 +413,11 @@ def get_devdata_description(devidselected: int):
             " WHERE dev = ?", (devidselected,))
         all_databat = cursor.fetchall()
         db.close()
-
-    return all_databat[0][0]
+    if all_databat:
+        description = all_databat[0][0]
+    else:
+        description = "Beskrivelse mangler"
+    return description
 
 
 
