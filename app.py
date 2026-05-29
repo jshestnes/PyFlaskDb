@@ -1,9 +1,8 @@
 from datetime import datetime, date, timedelta
 import platform
 import sqlite3
-from tkinter.tix import INTEGER
-
 from flask import Flask, session, render_template, request, g
+
 ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445. 29.05.2026"
 app = Flask(__name__)
 app.secret_key = "sadfaweqr345tcvbbf"
