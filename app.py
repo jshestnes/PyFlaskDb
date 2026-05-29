@@ -1,15 +1,17 @@
 from datetime import datetime, date, timedelta
 import platform
 import sqlite3
+from tkinter.tix import INTEGER
+
 from flask import Flask, session, render_template, request, g
-ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445. 27.05.2026"
+ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445. 29.05.2026"
 app = Flask(__name__)
 app.secret_key = "sadfaweqr345tcvbbf"
 app.config["SESSION_COOKIE_NAME"] = "myCOOKIE_monSTER528"
 theDatabase = "/home/jsh/2026/tutorialtid20260327.db"  # Linux
 
-devidstart = 104
-sensorbeskrivelse = "Sensorbeskrivelse kommer xxx"
+devidstart = 104            # Terrassen
+sensorbeskrivelse = "Sensorbeskrivelse kommer"
 
 def detect_os():
     os_name = platform.system()  # Returns 'Windows', 'Linux', or 'Darwin' (macOS)
@@ -82,6 +84,9 @@ def index():
     now = datetime.now()
     idag = now.strftime("%A %d.%m.%Y")
     data = get_db(0,devidselected)
+
+    sensorbeskrivelse = get_devdata_description(devidselected)
+
     #return str(data)
     return render_template("index.html", all_data=data, tempdag=idag, dateadjust="0", sensorbeskrivelse=sensorbeskrivelse, devidselected=devidselected)
 
@@ -152,8 +157,11 @@ def get_dbport(dateadjust: int,devidselected: int):
     if db is None:
         db = sqlite3.connect(theDatabase, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         cursor = db.cursor()
-        cursor.execute("SELECT datotid, dev, cmd, cmdtext, portseconds, bootcount, softwareid, restartreason from garageportdata "        # Columns 0-6
-                            " ORDER BY datotid DESC LIMIT 16")
+        cursor.execute("SELECT datotid, dev, cmd, cmdtext, portseconds, "
+                       " bootcount, softwareid, restartreason, "
+                       " cmsensor1, cmsensor2, cmsensor3 "
+                       " FROM garageportdata "        # Columns 0-6
+                       " ORDER BY datotid DESC LIMIT 16")
         all_dataport = cursor.fetchall()
 
     return all_dataport
@@ -244,6 +252,7 @@ def button_clicked():
 
     # Redirect back to home with a message
     data = get_db(0, devid)
+    sensorbeskrivelse = get_devdata_description(devid)
     return render_template("index.html", all_data=data, tempdag=idag, dateadjust=0, sensorbeskrivelse=sensorbeskrivelse, devidselected=devid)
 
 
@@ -294,6 +303,8 @@ def date_select():
 
     idag = dagen.strftime("%A %d.%m.%Y")
 
+    sensorbeskrivelse = get_devdata_description(devidselected)
+
     # Redirect back to home with a message
     data = get_db(dateadjust2, devidselected)
     return render_template("index.html", all_data=data, tempdag=idag, dateadjust=dateadjust2, sensorbeskrivelse=sensorbeskrivelse, devidselected=devidselected)
@@ -309,6 +320,7 @@ def devices_clicked():
     pos = ""
     esp = ""
     mod = ""
+    description = ""
 
     devidfind = request.form.get("devidfind")
     print(f"devidfind: {devidfind}")
@@ -325,13 +337,47 @@ def devices_clicked():
             pos = data[0][3]
             esp = data[0][4]
             mod = data[0][5]
+            description = data[0][12]
         else:
             datereg = f"Not found: {devidfind}"
+
+
+    if devidfindnew == "SAVE":
+        dev = request.form.get("devidfind")
+        print(f"dev: {dev}")
+        pos = request.form.get("pos")
+        print(f"pos: {pos}")
+        description = request.form.get("desc")
+        print(f"description: {description}")
+        update_devdata(dev, description)
+
+
     # Redirect back to home with a message
     #data = get_dbbatmonitor(0, devid)
     return render_template("devices.html",
                            devidfind=devidfind, datereg=datereg, mac=mac,
-                           pos=pos, esp=esp, mod=mod)
+                           pos=pos, esp=esp, mod=mod, desc=description)
+
+
+
+
+# 29.05.2026 update_device
+def update_devdata(dev: int, description):
+    print(f">>> update_devdata {dev} / {description}")
+    dbSQLite3Init()
+
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = sqlite3.connect(theDatabase, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        cursor = db.cursor()
+        cursor.execute("UPDATE devdata "
+         " SET description = ? "
+         " WHERE dev = ?", (description, dev))
+        db.commit()
+        db.close()
+
+
+
 
 
 # 25.05.2026 *******************************************************
@@ -346,12 +392,32 @@ def get_device(devidselected: int):
         cursor.execute("SELECT "
             " datereg, dev, "
             " mac, pos, esp, mod, "
-            " sen1, sen2, sen3, sen4, sen5, sen6 "
+            " sen1, sen2, sen3, sen4, sen5, sen6, "
+            " description "
             " FROM devdata "
             " WHERE dev = ?", (devidselected,))
         all_databat = cursor.fetchall()
 
     return all_databat
+
+def get_devdata_description(devidselected: int):
+    print(f">>> get_devdata_description: {devidselected}")
+    dbSQLite3Init()
+
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = sqlite3.connect(theDatabase, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        cursor = db.cursor()
+        cursor.execute("SELECT "
+            " description "
+            " FROM devdata "
+            " WHERE dev = ?", (devidselected,))
+        all_databat = cursor.fetchall()
+        db.close()
+
+    return all_databat[0][0]
+
+
 
 
 if __name__ == '__main__':

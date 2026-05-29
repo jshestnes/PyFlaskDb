@@ -31,6 +31,9 @@
     <th>Bot</th>
     <th>Sid</th>
     <th>Rst</th>
+    <th>cm1</th>
+    <th>cm1</th>
+    <th>cm3</th>
   </tr>
 {% for item in all_dataport %}
   <tr>
@@ -44,6 +47,10 @@
     <td class="temperaturedata">{{ item[4] | zeroseconds() }}</td>
     <td>{{ item[5] }}</td>
     <td>{{ item[6] }}</td>
+    <td>{{ item[7] }}</td>
+    <td class="temperaturedata">{{ "%.2f"|format(item[8]) }}</td>
+    <td class="temperaturedata">{{ "%.2f"|format(item[9]) }}</td>
+    <td class="temperaturedata">{{ "%.2f"|format(item[10]) }}</td>
   </tr>
 {% endfor %}
 </table>
