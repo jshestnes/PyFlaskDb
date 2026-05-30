@@ -351,12 +351,46 @@ def devices_clicked():
         update_devdata(dev, description)
 
 
+    if devidfindnew == "NEW":
+        dev = request.form.get("devidfind")
+        print(f"dev: {dev}")
+        pos = request.form.get("pos")
+        print(f"pos: {pos}")
+        description = request.form.get("desc")
+        print(f"description: {description}")
+        retval = insert_devdata(dev, pos, description)
+        if (retval != "OK"):
+            pos = retval
+
+
     # Redirect back to home with a message
     #data = get_dbbatmonitor(0, devid)
     return render_template("devices.html",
                            devidfind=devidfind, datereg=datereg, mac=mac,
                            pos=pos, esp=esp, mod=mod, desc=description)
 
+
+
+# 30.05.2026 update_device
+def insert_devdata(dev: int, pos: str, description: str):
+    print(f">>> insert_devdata {dev} / {description}")
+    dbSQLite3Init()
+
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = sqlite3.connect(theDatabase, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        # Check if exist
+        data = get_device(dev)
+        if (data):
+            return f"ERROR: {dev} already exists!"
+        new_user = (dev, pos, description)
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO devdata  "
+            " ( dev, pos, description ) "
+            " VALUES ( ?, ?, ? )", new_user )
+        db.commit()
+        db.close()
+        return "OK"
 
 
 
