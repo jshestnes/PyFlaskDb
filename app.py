@@ -3,7 +3,7 @@ import platform
 import sqlite3
 from flask import Flask, session, render_template, request, g
 
-ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445. 29.05.2026"
+ver = ">>> PyFlaskDb 20.03.2026 - 19.04.2026 1324 - PC 08.05.2026. PC 25.05.2026 1445. 31.05.2026"
 app = Flask(__name__)
 app.secret_key = "sadfaweqr345tcvbbf"
 app.config["SESSION_COOKIE_NAME"] = "myCOOKIE_monSTER528"
@@ -320,15 +320,18 @@ def devices_clicked():
     esp = ""
     mod = ""
     description = ""
+    errmsg = ""
 
     devidfind = request.form.get("devidfind")
     print(f"devidfind: {devidfind}")
     devidfindnew = request.form.get("devicebutton")
     print(f"devidfindnew: {devidfindnew}")
     if devidfindnew == "FIND":
+        print(f"FIND dev: {devidfind}")
         data = get_device(devidfind)
         print(data)
         if (data):
+            errmsg = ""
             datereg = data[0][0]
             print(f"datereg: {datereg}")
             mac = data[0][2]
@@ -338,36 +341,34 @@ def devices_clicked():
             mod = data[0][5]
             description = data[0][12]
         else:
-            datereg = f"Not found: {devidfind}"
+            errmsg = f"Not found: {devidfind}"
 
 
     if devidfindnew == "SAVE":
         dev = request.form.get("devidfind")
-        print(f"dev: {dev}")
+        print(f"SAVE dev: {dev}")
         pos = request.form.get("pos")
         print(f"pos: {pos}")
         description = request.form.get("desc")
         print(f"description: {description}")
-        update_devdata(dev, description)
+        errmsg = update_devdata(dev, description)
 
 
     if devidfindnew == "NEW":
         dev = request.form.get("devidfind")
-        print(f"dev: {dev}")
+        print(f"NEW dev: {dev}")
         pos = request.form.get("pos")
         print(f"pos: {pos}")
         description = request.form.get("desc")
         print(f"description: {description}")
-        retval = insert_devdata(dev, pos, description)
-        if (retval != "OK"):
-            pos = retval
+        errmsg = insert_devdata(dev, pos, description)
 
 
     # Redirect back to home with a message
     #data = get_dbbatmonitor(0, devid)
     return render_template("devices.html",
-                           devidfind=devidfind, datereg=datereg, mac=mac,
-                           pos=pos, esp=esp, mod=mod, desc=description)
+        devidfind=devidfind, datereg=datereg, mac=mac,
+        pos=pos, esp=esp, mod=mod, desc=description, errmsg=errmsg)
 
 
 
@@ -390,7 +391,7 @@ def insert_devdata(dev: int, pos: str, description: str):
             " VALUES ( ?, ?, ? )", new_user )
         db.commit()
         db.close()
-        return "OK"
+    return f"{dev} created OK"
 
 
 
@@ -408,10 +409,7 @@ def update_devdata(dev: int, description):
          " WHERE dev = ?", (description, dev))
         db.commit()
         db.close()
-
-
-
-
+    return f"{dev} updated OK"
 
 # 25.05.2026 *******************************************************
 def get_device(devidselected: int):
@@ -430,8 +428,10 @@ def get_device(devidselected: int):
             " FROM devdata "
             " WHERE dev = ?", (devidselected,))
         all_databat = cursor.fetchall()
+        db.close()
 
     return all_databat
+
 
 def get_devdata_description(devidselected: int):
     print(f">>> get_devdata_description: {devidselected}")
