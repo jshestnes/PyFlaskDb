@@ -114,3 +114,7 @@ label {
 .temperaturedata {
   text-align: right;
 }
+
+.errmsg {
+    color: red;
+}
